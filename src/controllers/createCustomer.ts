@@ -10,8 +10,8 @@ try{
     if(!email){
         return res.status(400).json({message: "email is required"});
     }
-    if(phone && phone.length < 10){
-        return res.status(400).json({message: "phone number must have at least 10 digits"});
+    if(phone && phone.length > 10){
+        return res.status(400).json({message: "phone number must have no more than 10 digits"});
     }
     if(address && address.length < 10){
         return res.status(400).json({message: "address must have at least 10 digits"});
@@ -28,8 +28,12 @@ try{
         phone,
         address,
     });
-    console.log(result);
-    res.status(200).json({message: "Customer created"})
+    if(result.acknowledged){
+        res.status(200).json({message: "Customer created"})
+    }else{
+        throw new Error("Customer not created")
+    }
+   
 }catch(err){
     res.status(500).json({error: err.toString()});
 }
